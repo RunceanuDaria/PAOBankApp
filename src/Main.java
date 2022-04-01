@@ -1,19 +1,18 @@
 import Bank.*;
 import Cards.*;
 import Customers.*;
+
+import java.text.SimpleDateFormat;
 import java.util.Scanner;
 
 public class Main {
 
     private static final String [] actions = {"1-create and display a customer", "2-create and display a card",
-                                              "3-create account", "4-get cash or pay with a specific card",
-                                              "5-add money for a specific user", "6-display user information",
-                                              "7-display current amount of money", "8-display account information",
-                                              "9-close account", "10-add card to account", "11-add asset to account",
-                                              "12-display user transactions",
-                                              "13-display top1 3 users (in terms of amount of money they own)",
-                                              "14-display top2 3 users (in terms of number of transactions)",
-                                              "15-exit"};
+                                              "3-create account", "4-add new card to an account",
+                                              "5-add asset to an account", "6-add transaction to an account",
+                                              "7-display user information", "8-display current amount",
+                                              "9-display account information", "10-display transaction",
+                                              "11-close account", "12-exit"};
 
     private static void displayActions()
     {
@@ -24,20 +23,6 @@ public class Main {
 
     }
 
-  // create and add customer: simple, natural or legal person user
-  // create and add customer_card : Visa, MasterCard
-  // create account
-  // get cash or pay with the card for a user
-  // add money for a specific user
-  // display user information
-  // display user transactions
-  // display current amount of money
-  // display the last spent amount of money for a user
-  // close account
-  // delete user
-  // display top1 3 users (in terms of amount of money they own)
-  // display top2 3 users (in terms of number of transactions)
-  // display  menu
     public static void main(String[] args) throws Exception {
 
         Scanner scanner = new Scanner(System.in);
@@ -49,14 +34,43 @@ public class Main {
         Card[] cards = new Card[20];
         Transaction[] transactions = new Transaction[50];
         Account[] accounts = new Account[10];
-        int numberOfCustomers = 0;
-        int numberOfCards = 0;
-        int numberOfTransactions = 0;
-        int numberOfAccounts = 0;
 
+       // variables use for store the returning data from functions into menu
+        Customer customer;
+        Card card;
+        Account account;
+        Transaction transaction;
+
+        // create data to show actions into menu
+        // create customers
+        Customer testCustomer1 = new Customer("customer1@test.ro", new Address("Eroilor", "Bucuresti", "Romania", 95));
+        Customer testCustomer2 = new NaturalPerson("customer2@test.ro", new Address("Iancu", "Iasi", "Romania", 78),
+                "Mihai", "Dumitru", "1900117325689");
+        Customer testCustomer3 = new LegalPerson("customer3@test.ro", new Address("Soarelui", "Cluj", "Romania", 100),
+                "Adona.srl", "200105", "125789635789");
+
+        // create cards
+        Card testCard1 = new VisaCard(20,"Mihai", "24/01/2024", "RO01011415", 6000, "active");
+        Card testCard2 = new MasterCard(200,"Alina", "14/01/2025","RO02050678", 899, "first");
+        Card testCard3 = new MasterCard(400,"Mihai", "18/06/2023","RO00985623", 200, "second");
+
+        // create accounts
+        Account testAccount1 =  new Account(testCustomer2, "RO49AAAA1B31007593840000", "active");
+        Account testAccount2 = new Account(testCustomer3, "DE89370400440532013000", "active");
+
+        // create transaction
+        Transaction testTransaction = new Transaction("RO49AAAA1B31007593840000","DE89370400440532013000",
+                                                        2000, "Pay for products",
+                                        new SimpleDateFormat("dd/MM/yyyy").parse("31/10/2021"));
+        // create assets
+        Asset testAsset1 = new Asset("watch", 10000, testCustomer2.getGuid());
+        Asset testAsset2 =  new Asset("bracelet", 5000, testCustomer3.getGuid());
+
+
+        // display actual actions and perform them in an interactive way
         while (!stop) {
             System.out.println("Press the specific number to perform an action.");
-            System.out.println("Press 14 to exit.");
+            System.out.println("Press 12 to exit.");
             int actionNumber = Integer.parseInt(scanner.nextLine());
             if (actionNumber < 1 || actionNumber > 15) {
                 System.out.println("Invalid action number!");
@@ -64,59 +78,30 @@ public class Main {
 
             }
             switch (actionNumber) {
-                case 1 -> customers[numberOfCustomers++] = service.createCustomer();
-                case 2 -> cards[numberOfCards++] = service.createCard();
-                /*case 3 ->
-                        {   System.out.println("Choose the customer index for which create account");
-                            // we suppose that the index exists in the customers array
-                            int customerIndex = Integer.parseInt(scanner.nextLine());
+                case 1 -> customer = service.createCustomer();
+                case 2 -> card = service.createCard();
+                case 3 ->
+                        {
+                            System.out.println("Iban:");
                             String iban = scanner.nextLine();
+                            System.out.println("Status:");
                             String status = scanner.nextLine();
-                            accounts[numberOfAccounts++] = service.createAccount(customers[customerIndex], iban, status);
+                            account = service.createAccount(testCustomer1, iban, status);
+                            System.out.println(account.toString());
+
                         }
-                /*case 4 ->;
-                case 5 -> ;
-                case 6 ->;
-                case 7 ->;
-                case 8 ->;
-                case 9 ->;
-                case 10 ->;
-                case 11 ->;
-                case 12 ->;
-                case 13->;*/
-                case 15 -> stop = true;
+                case 4 -> { service.addCard(testAccount1, testCard3); service.accountCards(testAccount1);}
+                case 5 -> {service.addAsset(testAccount1, testAsset1); service.accountAssets(testAccount1);}
+                case 6 -> {service.addTransaction(testAccount2, testTransaction); service.accountTransactions(testAccount2);}
+                case 7 ->  service.userInformation(testCustomer2);
+                case 8 ->  System.out.println(service.currentAmount(testAccount2));
+                case 9 ->  service.accountInformation(testAccount2);
+                case 10 -> service.accountTransactions(testAccount1);
+                case 11 -> {service.closeAccount(testAccount1); System.out.println(testAccount1.getStatus());}
+                case 12 -> stop = true;
             }
-            ;
         }
 
-
-
-
-    /*
-        Customer custom = new Customer(scanner);
-        String custom2 = custom.toString();
-        System.out.println(custom2);
-
-        Customer [] customers =  new Customer[2];
-       customers[0] = new Customer("customer0@test.ro", new Address("Eroilor", "Bucuresti", "Romania", 95));
-       customers[1] = new Customer("customer1@test.ro", new Address("Eroilor", "Bucuresti", "Romania", 95));
-       System.out.println(customers[0].getGuid());
-       System.out.println(customers[1].getGuid());*/
-
-      /* Card [] cards = new Card[2];
-       cards[0] = new Card(20,"Dacian", "24/01/2024", "RO01011415", 6000);
-       cards[1] = new Card(200,"Alina", "14/01/2025","RO02050678", 899);
-
-       System.out.println(cards[0].toString());
-       System.out.println(cards[1].toString());*/
-        /*Scanner scanner = new Scanner(System.in);
-        Service service = new Service();
-        service.createCustomer("simple", scanner);*/
-
-        //
-
-
-        // }
 
     }
 }

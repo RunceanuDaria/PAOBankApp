@@ -3,11 +3,7 @@ package Bank;
 import Cards.Card;
 import Cards.MasterCard;
 import Cards.VisaCard;
-import Customers.Address;
 import Customers.Customer;
-
-import java.util.Arrays;
-import java.util.Scanner;
 import java.util.UUID;
 
 public class Account {
@@ -41,32 +37,18 @@ public class Account {
     }
 
     // getters
-    public UUID getCustomerGuid() {
-        return this.customerGuid;
-    }
+    public UUID getCustomerGuid() {return this.customerGuid;}
 
-    public String getIban() {
-        return this.iban;
-    }
+    public String getIban() {return this.iban;}
 
-    public String getStatus() {
-        return this.status;
-    }
+    public String getStatus() {return this.status;}
 
-    public long getTotalAmount() {
-        return this.totalAmount;
-    }
-    public int getNumberOfCards() {
-        return this.numberOfCards;
-    }
+    public long getTotalAmount() {return this.totalAmount;}
+    public int getNumberOfCards() {return this.numberOfCards;}
 
-    public int getNumberOfAssets() {
-        return this.numberOfAssets;
-    }
+    public int getNumberOfAssets() {return this.numberOfAssets;}
 
-    public int getNumberOfTransactions() {
-        return this.numberOfTransactions;
-    }
+    public int getNumberOfTransactions() {return this.numberOfTransactions;}
 
     public Asset[] getAssets() {
         Asset[] accountAssets = new Asset[this.getNumberOfAssets()];
@@ -74,12 +56,26 @@ public class Account {
             accountAssets[i] = this.assets[i];
         return accountAssets;
     }
+    public void displayAssets()
+    {
+        for(int i = 0; i<numberOfAssets; i++)
+        {
+            System.out.println(this.assets[i].toString());
+        }
+    }
 
     public Card[] getCards() {
         Card[] accountCards = new Card[this.getNumberOfCards()];
         for (int i = 0; i < accountCards.length; i++)
             accountCards[i] = this.cards[i];
         return accountCards;
+    }
+    public void displayCards()
+    {
+        for(int i = 0; i<this.numberOfCards;i++)
+        {
+            System.out.println(this.cards[i].toString());
+        }
     }
     // transactions
     public Transaction[] getTransactions() {
@@ -115,11 +111,20 @@ public class Account {
     }
 
 
-    public void addTransaction(Transaction transaction) {
+    public void addTransaction(Transaction transaction)
+    {
         this.transactions[this.numberOfTransactions] = transaction; //add card to the cards array
         this.totalAmount += transaction.getAmount(); // actualize the total_amount with the amount of new added card
         this.numberOfTransactions++;
 
+    }
+
+    public void displayTransactions()
+    {
+        for(int i = 0; i<this.numberOfTransactions;i++)
+        {
+            System.out.println(this.transactions[i].toString());
+        }
     }
 
 }

@@ -14,7 +14,7 @@ public class Address {
         this.country = country;
         this.number = number;
     }
-
+// create from input
     public Address(Scanner scanner)
     {
         System.out.println("Please enter the address");
@@ -27,7 +27,7 @@ public class Address {
         System.out.println("Number: ");
         this.number = Integer.parseInt(scanner.nextLine());
     }
-
+// method use for print
     @Override
     public String toString()
     {

@@ -1,9 +1,6 @@
 package Cards;
 
-import Customers.Address;
-
 import java.util.Scanner;
-import java.util.UUID;
 
 public class MasterCard extends Card{
 

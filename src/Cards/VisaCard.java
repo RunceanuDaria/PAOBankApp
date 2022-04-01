@@ -1,9 +1,6 @@
 package Cards;
 
-import Customers.Address;
-
 import java.util.Scanner;
-import java.util.UUID;
 
 public class VisaCard extends Card{
     private static long numberOfAtm = 2000000;

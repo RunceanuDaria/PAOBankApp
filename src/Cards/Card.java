@@ -2,7 +2,6 @@ package Cards;
 import Customers.Address;
 
 import java.util.Scanner;
-import java.util.UUID;
 
 public class Card {
     private int cardNumber;

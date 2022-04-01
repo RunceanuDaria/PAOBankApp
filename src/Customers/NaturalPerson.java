@@ -39,7 +39,7 @@ public class NaturalPerson extends Customer{
                 "Lastname: " + this.lastName + "\n",
                 "Cnp: " + this.cnp + "\n");
     }
-
+// getters
     public String getFirstName() {return this.firstName;}
 
      public String getLastName() {return this.lastName;}

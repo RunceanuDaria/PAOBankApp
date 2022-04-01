@@ -4,6 +4,7 @@ import java.util.Scanner;
 import java.util.UUID;
 
 public class Customer {
+// use universal unique identifier for a customer
     UUID customerGuid;
     private String email;
     private Address address;
@@ -14,7 +15,7 @@ public class Customer {
         this.email = email;
         this.address = address;
     }
-
+// create for input
     public Customer(Scanner scanner)
     {
         System.out.println("Please enter customer info");
@@ -35,7 +36,7 @@ public class Customer {
 
         );
     }
-
+// getters
     public UUID getGuid() {return this.customerGuid;}
 
     public String getEmail() {return this.email;}

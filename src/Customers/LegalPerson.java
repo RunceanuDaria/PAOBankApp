@@ -15,7 +15,7 @@ public class LegalPerson extends Customer
         this.registrationCode = registrationCode;
         this.bankAccount = bankAccount;
     }
-
+// create from input
     public LegalPerson(Scanner scanner)
     {
             super(scanner);

@@ -18,7 +18,7 @@ public class Asset {
 
     public String getName(){return this.name;}
     public long getValue() {return this.value;}
-
+// use for print
     @Override
     public String toString()
     {

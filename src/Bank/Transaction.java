@@ -31,6 +31,7 @@ public class Transaction {
 
         );
     }
+   //getters
     public String getSenderIban() {return this.senderIban;}
 
     public String getReceiverIban() {return this.receiverIban;}
