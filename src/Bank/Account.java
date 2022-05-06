@@ -126,5 +126,10 @@ public class Account {
             System.out.println(this.transactions[i].toString());
         }
     }
-
+// for write into CSV format
+public String convertToCsv(){
+        return customerGuid + "," +
+               iban + "," +
+               status;
+}
 }

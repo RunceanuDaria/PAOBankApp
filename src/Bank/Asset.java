@@ -29,5 +29,10 @@ public class Asset {
                                "Customer ID: " + this.customerGuid + "\n");
     }
 
-
+// for writing in CSV format
+    public String convertToCsv(){
+        return name  + "," +
+               value + "," +
+               customerGuid;
+    }
 }

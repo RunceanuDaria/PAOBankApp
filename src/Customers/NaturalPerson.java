@@ -45,4 +45,7 @@ public class NaturalPerson extends Customer{
      public String getLastName() {return this.lastName;}
 
      public String getCnp() { return this.cnp;}
+
+
+
 }
