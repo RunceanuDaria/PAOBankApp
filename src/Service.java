@@ -1,9 +1,20 @@
 import Cards.*;
 import Customers.*;
 import Bank.*;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Service {
+// store info
+    private List<Customer> customers = new ArrayList<>();
+    private List<Transaction> transactions = new ArrayList<>();
+    private List <Asset> assets = new ArrayList<>();
+    private List <Account> accounts = new ArrayList<>();
+    private List <Card> cards = new ArrayList<>();
+
+
     // create customers
 
     public Customer createCustomer() throws Exception{
@@ -122,5 +133,90 @@ public class Service {
 
     // close account
     public void closeAccount(Account account) {account.setStatus("false");}
+
+    // getters
+    public List<Customer> getCustomers(){
+        return this.customers;
+    }
+    public List<Transaction> getTransactions(){
+        return this.transactions;
+
+    }
+    public List<Asset> getAssets(){
+        return this.assets;
+    }
+    public List<Account> getAccounts(){
+        return this.accounts;
+    }
+    public List<Card> getCards(){return this.cards;}
+
+    // setters
+    public void setCustomers(List <Customer> customers){
+        this.customers = customers;
+    }
+    public void setTransactions(List<Transaction> transactions){
+        this.transactions = transactions;
+    }
+    public void setAssets (List<Asset> assets){
+        this.assets = assets;
+    }
+    public void setAccounts(List<Account> accounts){
+        this.accounts = accounts;
+    }
+
+    // another actions for stage 2
+    public void crtCustomer(Scanner scanner){
+        System.out.println("Choose one of the above type of customers:  simple, natural, legal.");
+        String type = scanner.nextLine();
+        Customer customer;
+        switch (type) {
+            case "simple" -> {
+                customer = createSimpleCustomer(scanner);
+                System.out.println(customer.toString());
+                this.customers.add(customer);
+            }
+            case "natural" -> {
+                customer = createNaturalPerson(scanner);
+                System.out.println(customer.toString());
+                this.customers.add(customer);
+
+            }
+            case "legal" -> {
+                customer = createLegalPerson(scanner);
+                System.out.println(customer.toString());
+                this.customers.add(customer);
+
+            }
+        }
+
+
+    }
+    public void crtCard(Scanner scanner)throws Exception
+    {
+        System.out.println("Choose one of the type: visa, mastercard.");
+        String type = scanner.nextLine();
+        Card newCard ;
+        if(type.equals("visa"))
+        {
+            newCard = new VisaCard(scanner);
+
+        }
+        else if (type.equals("mastercard"))
+        {
+            newCard = new MasterCard(scanner);
+        }
+        else throw new Exception("This type of card does not exist!");
+        System.out.println(newCard.toString());
+        this.cards.add(newCard);
+    }
+
+    public void crtAccount(Customer customer, String iban, String status)
+    {
+       Account  account = new Account(customer, iban, status);
+       this.accounts.add(account);
+
+    }
+
+
 
 }

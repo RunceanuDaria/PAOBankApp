@@ -6,8 +6,8 @@ import java.util.UUID;
 public class Customer {
 // use universal unique identifier for a customer
     UUID customerGuid;
-    private String email;
-    private Address address;
+    private final String email;
+    private final Address address;
 
     public Customer(String email, Address address)
     {
@@ -18,8 +18,10 @@ public class Customer {
 // create for input
     public Customer(Scanner scanner)
     {
-        System.out.println("Please enter customer info");
-        System.out.println("Email: ");
+        /*
+         System.out.println("Please enter customer info");
+         System.out.println("Email: ");
+        */
         this.email = scanner.nextLine();
         this.address = new Address(scanner);
         this.customerGuid = UUID.randomUUID();
@@ -42,6 +44,10 @@ public class Customer {
     public String getEmail() {return this.email;}
 
     public Address getCustomerAddress() {return this.address;}
-
+// transform to CSV file format
+    public String convertToCsv(){
+        return email + "," +
+               address.convertToCsv();
+    }
 
 }

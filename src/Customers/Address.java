@@ -38,4 +38,11 @@ public class Address {
                             "Number: " + this.number + "\n"
                             );
     }
+
+    public String convertToCsv(){
+        return street + "," +
+               city + ","  +
+               country + "," +
+               number;
+    }
 }

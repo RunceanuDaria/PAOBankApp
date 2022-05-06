@@ -1,6 +1,7 @@
 package Bank;
 
 import java.util.Date;
+import java.util.logging.SimpleFormatter;
 
 public class Transaction {
     private  final String senderIban,  receiverIban;
@@ -26,8 +27,8 @@ public class Transaction {
                 "Sender IBAN: " + this.senderIban + "\n",
                 "Receiver IBAN: " + this.receiverIban + "\n",
                 "Amount: " + this.amount + "\n",
-                "Description: " + this.description,
-                "Transaction date: " + this.transactionDate
+                "Description: " + this.description + "\n",
+                "Transaction date: " + this.transactionDate + "\n"
 
         );
     }
@@ -40,5 +41,12 @@ public class Transaction {
 
     public String getDescription(){return this.description;}
     public Date getTransactionDate() {return this.transactionDate;}
-
+// for writing in CSV format
+    public String convertToCsv(){
+        return senderIban + "," +
+               receiverIban + "," +
+               amount + "," +
+               description + "," +
+               transactionDate;
+    }
 }

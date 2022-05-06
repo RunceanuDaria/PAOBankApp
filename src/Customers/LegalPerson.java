@@ -46,4 +46,5 @@ public class LegalPerson extends Customer
 
     public String getBankAccount() {return bankAccount;}
 
+
 }
