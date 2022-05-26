@@ -1,7 +1,17 @@
 import Bank.*;
 import Cards.*;
 import Customers.*;
+import Database.ConnectionManager;
+import Repository.AddressRepository;
+import Repository.CustomerRepository;
+import Repository.LegalPersonRepository;
+import Repository.NaturalPersonRepository;
+import Services.customers.AddressService;
+import Services.customers.CustomerService;
+import Services.customers.LegalPersonService;
+import Services.customers.NaturalPersonService;
 
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Scanner;
@@ -104,9 +114,9 @@ public class Main {
                 }
             }*/
 
- // main for the second stage
+    // main for the second stage
     public static void main(String[] args) throws Exception {
-        Scanner scanner = new Scanner(System.in);
+        /*Scanner scanner = new Scanner(System.in);
 
         Service service = new Service();
         Audit audit = new Audit();
@@ -182,7 +192,7 @@ public class Main {
         CustmSingleton.getInstance().setCustomers(service.getCustomers());
         TransSingleton.getInstance().setTransactions(service.getTransactions());
         AssetSingleton.getInstance().setAssets(service.getAssets());
-        AccSingleton.getInstance().setAccounts(service.getAccounts());
+        AccSingleton.getInstance().setAccounts(service.getAccounts());*/
 // write to CSV
 /*      CustmSingleton.getInstance().writeToCsv();
         TransSingleton.getInstance().writeToCsv();
@@ -190,6 +200,115 @@ public class Main {
         AccSingleton.getInstance().writeToCsv();
 
  */
+
+        demoPersistence();
+    }
+
+    private static void demoPersistence() throws Exception {
+        ConnectionManager connectionManager = new ConnectionManager(
+                "jdbc:mysql://localhost:3306/bank", "root", ""
+        );
+        connectionManager.initialize();
+
+        //Initialize repositories
+        AddressRepository addressRepository = new AddressRepository(connectionManager);
+        CustomerRepository customerRepository = new CustomerRepository(connectionManager);
+        LegalPersonRepository legalPersonRepository = new LegalPersonRepository(connectionManager);
+        NaturalPersonRepository naturalPersonRepository = new NaturalPersonRepository(connectionManager);
+
+        //Initialize services
+        AddressService addressService = new AddressService(addressRepository);
+        CustomerService customerService = new CustomerService(customerRepository, addressRepository);
+        LegalPersonService legalPersonService = new LegalPersonService(legalPersonRepository, addressRepository);
+        NaturalPersonService naturalPersonService = new NaturalPersonService(naturalPersonRepository, addressRepository);
+
+        //Create entities
+        System.out.println("\n-------------Create entities----------------\n");
+
+        Address address = addressService.create(new Address("street", "city", "country", 1));
+        System.out.println("address created: " + (address != null));
+
+        Address customersAddress = addressService.create(new Address("another street", "another city", "same country", 111));
+        System.out.println("customers address created: " + (customersAddress != null));
+
+        Customer customer = customerService.create(new Customer("email", customersAddress));
+        System.out.println("customer created: " + (customer != null));
+
+        LegalPerson legalPerson = legalPersonService.create(new LegalPerson("email", customersAddress, "name", "registration code", "bank account"));
+        System.out.println("legalPerson created: " + (legalPerson != null));
+
+        NaturalPerson naturalPerson = naturalPersonService.create(new NaturalPerson("email", customersAddress, "firstName", "Last name", "1234567891234"));
+        System.out.println("naturalPerson created: " + (naturalPerson != null));
+
+        //Get entities
+        System.out.println("\n\nPress enter to continue...");
+        System.in.read();
+        System.out.println("\n----------------Get entities----------------\n");
+
+        Address createdAddress = addressService.get(address.getID());
+        System.out.println("\naddress:\n"+ createdAddress.toString());
+
+        Address createdCustomersAddress = addressService.get(createdAddress.getID());
+        System.out.println("\ncustomers address:\n"+ createdCustomersAddress.toString());
+
+        Customer createdCustomer = customerService.getWithRelatedFields(customer.getID());
+        System.out.println("\ncustomer:\n"+ createdCustomer.toString());
+
+        LegalPerson createdLegalPerson = legalPersonService.getWithRelatedFields(legalPerson.getID());
+        System.out.println("\nlegal person:\n"+ createdLegalPerson.toString());
+
+        NaturalPerson createdNaturalPerson = naturalPersonService.getWithRelatedFields(naturalPerson.getID());
+        System.out.println("\nnatural person:\n"+ createdNaturalPerson.toString());
+
+
+
+        //Update entities
+        System.out.println("\n\nPress enter to continue...");
+        System.in.read();
+        System.out.println("\n---------------Update entities----------------\n");
+        boolean status;
+        address.setCity("updated city");
+        status = addressService.update(address);
+        System.out.println("update address: " + status);
+
+        customersAddress.setCity("updated city");
+        status = addressService.update(customersAddress);
+        System.out.println("update customers address: " + status);
+
+        customer.setEmail("updated email");
+        status = customerService.update(customer);
+        System.out.println("update customer: " + status);
+
+        legalPerson.setEmail("updated email");
+        status = legalPersonService.update(legalPerson);
+        System.out.println("update legalPerson: " + status);
+
+        naturalPerson.setEmail("updated email");
+        status = naturalPersonService.update(naturalPerson);
+        System.out.println("update naturalPerson: " + status);
+
+
+        //Delete entities
+        System.out.println("\n\nPress enter to continue...");
+        System.in.read();
+        System.out.println("\n---------------Delete entities----------------\n");
+        boolean deleteStatus;
+
+        deleteStatus = addressService.delete(address.getID());
+        System.out.println("delete address: " + deleteStatus);
+
+        deleteStatus = addressService.delete(customersAddress.getID());
+        System.out.println("delete customers address: " + deleteStatus);
+
+        deleteStatus = customerService.delete(customer.getID());
+        System.out.println("delete customer: " + deleteStatus);
+
+        deleteStatus = legalPersonService.delete(legalPerson.getID());
+        System.out.println("delete legalPerson: " + deleteStatus);
+
+        deleteStatus = naturalPersonService.delete(naturalPerson.getID());
+        System.out.println("delete naturalPerson: " + deleteStatus);
+
     }
 
 }

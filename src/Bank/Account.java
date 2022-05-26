@@ -20,7 +20,7 @@ public class Account {
 
 // an account does not exist without a customer
     public Account(Customer customer, String iban, String status) {
-        this.customerGuid = customer.getGuid();
+        this.customerGuid = customer.getCustomerGuid();
         this.iban = iban;
         this.status = status;
     }
