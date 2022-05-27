@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Scanner;
 
-public class Main {
+/* public class Main {
 
     private static final String[] actions = {"1-create and display a customer", "2-create and display a card",
             "3-create account", "4-add new card to an account",
@@ -114,8 +114,8 @@ public class Main {
                 }
             }*/
 
-    // main for the second stage
-    public static void main(String[] args) throws Exception {
+   // main for the second stage
+    //public static void main(String[] args) throws Exception {
         /*Scanner scanner = new Scanner(System.in);
 
         Service service = new Service();
@@ -192,17 +192,200 @@ public class Main {
         CustmSingleton.getInstance().setCustomers(service.getCustomers());
         TransSingleton.getInstance().setTransactions(service.getTransactions());
         AssetSingleton.getInstance().setAssets(service.getAssets());
-        AccSingleton.getInstance().setAccounts(service.getAccounts());*/
+        AccSingleton.getInstance().setAccounts(service.getAccounts());
 // write to CSV
-/*      CustmSingleton.getInstance().writeToCsv();
+        CustmSingleton.getInstance().writeToCsv();
         TransSingleton.getInstance().writeToCsv();
         AssetSingleton.getInstance().writeToCsv();
-        AccSingleton.getInstance().writeToCsv();
+        AccSingleton.getInstance().writeToCsv();*/
 
- */
+// main for the third stage
+public class Main {
 
-        demoPersistence();
+    private static final String[] actions = {"1-create an address", "2-create and display a simple customer", "3-create and display a legal person",
+            "4-create and display a natural person", "5- update an address",
+            "6-update a simple customer", "7-update a legal person customer",
+            "8-update a natural person customer", "9-delete a simple customer",
+            "10-delete a natural person customer", "11-delete a legal person customer",
+            "12-delete an address", "13-exit"};
+
+    private static void displayActions() {
+        System.out.println("Press the number before each action to perform it!");
+        for (String action : actions) {
+            System.out.println(action);
+        }
     }
+
+    public static void main(String[] args) throws SQLException, ClassNotFoundException {
+        Scanner scanner = new Scanner(System.in);
+        ConnectionManager connectionManager = new ConnectionManager(
+                "jdbc:mysql://localhost:3306/bank", "root", "");
+        connectionManager.initialize();
+
+        //Initialize repositories
+        AddressRepository addressRepository = new AddressRepository(connectionManager);
+        CustomerRepository customerRepository = new CustomerRepository(connectionManager);
+        LegalPersonRepository legalPersonRepository = new LegalPersonRepository(connectionManager);
+        NaturalPersonRepository naturalPersonRepository = new NaturalPersonRepository(connectionManager);
+
+        //Initialize services
+        AddressService addressService = new AddressService(addressRepository);
+        CustomerService customerService = new CustomerService(customerRepository, addressRepository);
+        LegalPersonService legalPersonService = new LegalPersonService(legalPersonRepository, addressRepository);
+        NaturalPersonService naturalPersonService = new NaturalPersonService(naturalPersonRepository, addressRepository);
+
+
+        Main.displayActions();
+        boolean stop = false;
+        // use for perform actions
+        Address customerAddress = addressService.create(new Address("another street", "another city", "same country", 111));
+
+
+        while (!stop) {
+            System.out.println("Press the specific number to perform an action.");
+            System.out.println("Press 13 to exit.");
+            int actionNumber = Integer.parseInt(scanner.nextLine());
+            if (actionNumber < 1 || actionNumber > 13) {
+                System.out.println("Invalid action number!");
+                break;
+
+            }
+
+            switch (actionNumber) {
+                case 1 -> {
+                    Address address = addressService.create(new Address(scanner));
+                    System.out.println("address created: " + (address != null));
+
+                    Address createdAddress = addressService.get(address.getID());
+                    System.out.println("\naddress:\n" + createdAddress.toString());
+                }
+
+
+                case 2 -> {
+                    Address customersAddress = addressService.create(new Address(scanner));
+                    System.out.println("customers address created: " + (customersAddress != null));
+                    Customer customer = customerService.create(new Customer(scanner, customersAddress));
+                    System.out.println("customer created: " + (customer != null));
+
+                    Customer createdCustomer = customerService.getWithRelatedFields(customer.getID());
+                    System.out.println("\ncustomer:\n" + createdCustomer.toString());
+                }
+
+                case 3 -> {
+                    LegalPerson legalPerson = legalPersonService.create(new LegalPerson(scanner, customerAddress));
+                    System.out.println("legalPerson created: " + (legalPerson != null));
+
+                    LegalPerson createdLegalPerson = legalPersonService.getWithRelatedFields(legalPerson.getID());
+                    System.out.println("\nlegal person:\n" + createdLegalPerson.toString());
+                }
+
+                case 4 -> {
+                    NaturalPerson naturalPerson = naturalPersonService.create(new NaturalPerson(scanner, customerAddress));
+                    System.out.println("naturalPerson created: " + (naturalPerson != null));
+
+                    NaturalPerson createdNaturalPerson = naturalPersonService.getWithRelatedFields(naturalPerson.getID());
+                    System.out.println("\nnatural person:\n" + createdNaturalPerson.toString());
+
+                }
+                case 5 -> {
+                    System.out.println("Enter address ID");
+                    int id;
+                    id = Integer.parseInt(scanner.nextLine());
+                    Address createdAddress = addressService.get(id);
+                    boolean status;
+                    String city;
+                    System.out.println("Enter the new city");
+                    city = scanner.nextLine();
+                    createdAddress.setCity(city);
+                    status = addressService.update(createdAddress);
+                    System.out.println("update address: " + status);
+
+                }
+
+                case 6 -> {
+                    boolean status;
+                    System.out.println("Enter customer ID");
+                    int id;
+                    id = Integer.parseInt(scanner.nextLine());
+                    Customer customer = customerService.getWithRelatedFields(id);
+                    System.out.println("Enter new email");
+                    String email;
+                    email = scanner.nextLine();
+                    customer.setEmail(email);
+                    status = customerService.update(customer);
+                    System.out.println("update customer: " + status);
+                }
+                case 7 -> {
+                    boolean status;
+                    System.out.println("Enter legal person customer ID");
+                    int id;
+                    id = Integer.parseInt(scanner.nextLine());
+                    LegalPerson legalPerson = legalPersonService.getWithRelatedFields(id);
+                    System.out.println("Enter new email");
+                    String email;
+                    email = scanner.nextLine();
+                    legalPerson.setEmail(email);
+                    status = legalPersonService.update(legalPerson);
+                    System.out.println("update legalPerson: " + status);
+                }
+                case 8 -> {
+                    boolean status;
+                    System.out.println("Enter natural person customer ID");
+                    int id;
+                    id = Integer.parseInt(scanner.nextLine());
+                    NaturalPerson naturalPerson = naturalPersonService.getWithRelatedFields(id);
+                    System.out.println("Enter new email");
+                    String email;
+                    email = scanner.nextLine();
+                    naturalPerson.setEmail(email);
+                    status = naturalPersonService.update(naturalPerson);
+                    System.out.println("update naturalPerson: " + status);
+                }
+                case 9 -> {
+                    boolean deleteStatus;
+                    System.out.println("Enter customer ID");
+                    int id;
+                    id = Integer.parseInt(scanner.nextLine());
+                    Customer customer = customerService.getWithRelatedFields(id);
+                    deleteStatus = customerService.delete(customer.getID());
+                    System.out.println("delete customer: " + deleteStatus);
+
+                }
+                case 10 -> {
+                    boolean deleteStatus;
+                    System.out.println("Enter legal person customer ID");
+                    int id;
+                    id = Integer.parseInt(scanner.nextLine());
+                    LegalPerson legalPerson = legalPersonService.getWithRelatedFields(id);
+                    deleteStatus = legalPersonService.delete(legalPerson.getID());
+                    System.out.println("delete legalPerson: " + deleteStatus);
+                }
+                case 11 -> {
+                    boolean deleteStatus;
+                    System.out.println("Enter natural person customer ID");
+                    int id;
+                    id = Integer.parseInt(scanner.nextLine());
+                    NaturalPerson naturalPerson = naturalPersonService.getWithRelatedFields(id);
+                    deleteStatus = naturalPersonService.delete(naturalPerson.getID());
+                    System.out.println("delete naturalPerson: " + deleteStatus);
+                }
+                case 12 -> {
+                    boolean deleteStatus;
+                    System.out.println("Enter address ID");
+                    int id;
+                    id = Integer.parseInt(scanner.nextLine());
+                    Address address = addressService.get(id);
+                    deleteStatus = addressService.delete(address.getID());
+                    System.out.println("delete address: " + deleteStatus);
+                }
+                case 13 -> stop = true;
+            }
+        }
+
+
+        //  demoPersistence();
+    }
+
 
     private static void demoPersistence() throws Exception {
         ConnectionManager connectionManager = new ConnectionManager(
@@ -246,20 +429,19 @@ public class Main {
         System.out.println("\n----------------Get entities----------------\n");
 
         Address createdAddress = addressService.get(address.getID());
-        System.out.println("\naddress:\n"+ createdAddress.toString());
+        System.out.println("\naddress:\n" + createdAddress.toString());
 
         Address createdCustomersAddress = addressService.get(createdAddress.getID());
-        System.out.println("\ncustomers address:\n"+ createdCustomersAddress.toString());
+        System.out.println("\ncustomers address:\n" + createdCustomersAddress.toString());
 
         Customer createdCustomer = customerService.getWithRelatedFields(customer.getID());
-        System.out.println("\ncustomer:\n"+ createdCustomer.toString());
+        System.out.println("\ncustomer:\n" + createdCustomer.toString());
 
         LegalPerson createdLegalPerson = legalPersonService.getWithRelatedFields(legalPerson.getID());
-        System.out.println("\nlegal person:\n"+ createdLegalPerson.toString());
+        System.out.println("\nlegal person:\n" + createdLegalPerson.toString());
 
         NaturalPerson createdNaturalPerson = naturalPersonService.getWithRelatedFields(naturalPerson.getID());
-        System.out.println("\nnatural person:\n"+ createdNaturalPerson.toString());
-
+        System.out.println("\nnatural person:\n" + createdNaturalPerson.toString());
 
 
         //Update entities
@@ -310,7 +492,4 @@ public class Main {
         System.out.println("delete naturalPerson: " + deleteStatus);
 
     }
-
 }
-
-

@@ -33,6 +33,17 @@ public class LegalPerson extends Customer {
         this.bankAccount = scanner.nextLine();
     }
 
+    public LegalPerson(Scanner scanner, Address address) {
+        super(scanner, address);
+        System.out.println("Please enter legal person info.");
+        System.out.println("Name: ");
+        this.name = scanner.nextLine();
+        System.out.println("Registration code: ");
+        this.registrationCode = scanner.nextLine();
+        System.out.println("Bank account: ");
+        this.bankAccount = scanner.nextLine();
+    }
+
     @Override
     public String toString() {
         String simpleCustomerInfo = super.toString();

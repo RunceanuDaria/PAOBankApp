@@ -38,6 +38,17 @@ public class NaturalPerson extends Customer {
         this.cnp = scanner.nextLine();
     }
 
+    public NaturalPerson(Scanner scanner, Address address) {
+        super(scanner, address);
+        System.out.println("Please enter natural person info.");
+        System.out.println("Firstname: ");
+        this.firstName = scanner.nextLine();
+        System.out.println("Lastname: ");
+        this.lastName = scanner.nextLine();
+        System.out.println("cnp: ");
+        this.cnp = scanner.nextLine();
+    }
+
     @Override
     public String toString() {
         String simpleCustomerInfo = super.toString();

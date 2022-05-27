@@ -60,11 +60,17 @@ public class Customer {
     // create for input
     public Customer(Scanner scanner) {
         /*
-         System.out.println("Please enter customer info");
-         System.out.println("Email: ");
-        */
+         System.out.println("Please enter customer info");*/
+        System.out.println("Email: ");
         this.email = scanner.nextLine();
         this.address = new Address(scanner);
+        this.customerGuid = UUID.randomUUID();
+    }
+
+    public Customer(Scanner scanner, Address address){
+        System.out.println("Email: ");
+        this.email = scanner.nextLine();
+        this.address = address;
         this.customerGuid = UUID.randomUUID();
     }
 
