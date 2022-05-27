@@ -28,6 +28,8 @@ public class Card {
         this.cardNumber = Integer.parseInt(scanner.nextLine());
         System.out.println("Code: ");
         this.code = Integer.parseInt(scanner.nextLine());
+        System.out.println("Owner name: ");
+        this.ownerName = scanner.nextLine();
         System.out.println("Closing date: ");
         this.closingDate = scanner.nextLine();
         System.out.println("IBAN: ");
